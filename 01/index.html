@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Arima:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Roboto+Slab:wght@400&family=Cinzel:wght@500&family=Great+Vibes&family=Newsreader:wght@500&family=Italiana&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#4A5A74; --navy-dark:#2E3F54; --gold:#d7ad649c; --ink:#404F6A;
+    --navy:#4A5A74; --navy-dark:#2E3F54; --gold:#D7AC64; --ink:#404F6A;
     --vh:1vh; --w:450px;
     --font-display:"Cormorant Garamond","Times New Roman",serif;   /* ganti ke 'analogue' jika punya lisensinya */
     --font-body:"Cormorant Garamond","Times New Roman",serif;      /* ganti ke 'bodebeck' jika punya lisensinya */
@@ -332,6 +332,9 @@
     #kolom.slide{transition:none}
   }
 </style>
+<script>
+  window.UNDANGAN_CONFIG = Object.assign({ sheetUrl: "https://script.google.com/macros/s/AKfycbxPe7tmv_tOE1C-PIgrT5EGW3AlegW3VrwiRJw7A0NIJaQC0AAG6kxUiACf0NwzZJilqw/exec" }, window.UNDANGAN_CONFIG || {});
+</script>
 </head>
 <body class="locked">
 
@@ -531,6 +534,7 @@
       <p class="t rv zoom">Berikan Ucapan &amp; Doa Restu</p>
       <div class="stats"><div><b id="sHadir">0</b><span>Hadir</span></div><div><b id="sTidak">0</b><span>Tidak Hadir</span></div></div>
       <div class="rsvp">
+        <input id="rHp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
         <input id="rName" type="text" placeholder="Nama Kamu" autocomplete="name" maxlength="60">
         <textarea id="rMsg" rows="4" maxlength="1000" placeholder="Berikan Ucapan &amp; Do'a"></textarea>
         <div class="q">Konfirmasi Kehadiran ?</div>
@@ -692,29 +696,53 @@
     else{var t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){}t.remove()}
   })});
 
-  // RSVP + ucapan (disimpan di browser; ganti ke API/Google Sheet untuk data bersama)
-  var KEY='undangan-ezi-cece-ucapan', pres='', rName=$('#rName'), rMsg=$('#rMsg'), send=$('#rSend');
-  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
-  function save(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
-  function esc(s){return s.replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  // RSVP + ucapan. Isi sheetUrl di UNDANGAN_CONFIG (bagian <head>) agar tersambung ke Google Sheet;
+  // jika kosong, ucapan hanya disimpan di browser pengunjung.
+  var SHEET=(window.UNDANGAN_CONFIG&&window.UNDANGAN_CONFIG.sheetUrl)||'';
+  var KEY='undangan-ezi-cece-ucapan', pres='', rName=$('#rName'), rMsg=$('#rMsg'), send=$('#rSend'), info=$('#rInfo'), items=[], busy=false;
+  function say(t,err){info.textContent=t; info.style.color=err?'#b3261e':''}
+  function lload(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+  function lsave(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function ago(t){var m=Math.floor((Date.now()-t)/6e4);if(m<1)return 'Baru saja';if(m<60)return m+' menit lalu';var h=Math.floor(m/60);if(h<24)return h+' jam lalu';return Math.floor(h/24)+' hari lalu'}
-  function render(){
-    var a=load(); $('#sHadir').textContent=a.filter(function(x){return x.p==='hadir'}).length;
-    $('#sTidak').textContent=a.filter(function(x){return x.p==='tidak'}).length;
-    $('#rList').innerHTML=a.slice().reverse().map(function(x){
-      return '<div class="cm"><div class="av">'+esc(x.n.charAt(0).toUpperCase())+'</div><div><b>'+esc(x.n)+'</b><span class="tag">'+(x.p==='hadir'?'Hadir':'Tidak Hadir')+'</span><small>'+ago(x.t)+'</small><p>'+esc(x.m)+'</p></div></div>'}).join('');
+  function render(stats){
+    var hd=stats?stats.hadir:items.filter(function(x){return x.p==='hadir'}).length;
+    var td=stats?stats.tidak:items.filter(function(x){return x.p==='tidak'}).length;
+    $('#sHadir').textContent=hd; $('#sTidak').textContent=td;
+    $('#rList').innerHTML=items.slice(-50).reverse().map(function(x){
+      return '<div class="cm"><div class="av">'+esc(String(x.n).charAt(0).toUpperCase())+'</div><div><b>'+esc(x.n)+'</b><span class="tag">'+(x.p==='hadir'?'Hadir':'Tidak Hadir')+'</span><small>'+ago(x.t)+'</small><p>'+esc(x.m)+'</p></div></div>'}).join('');
   }
-  function check(){send.disabled=!(rName.value.trim()&&rMsg.value.trim()&&pres)}
+  function refresh(){
+    if(!SHEET){items=lload();render();return Promise.resolve()}
+    return fetch(SHEET).then(function(r){return r.json()}).then(function(d){
+      if(d&&d.ok){items=d.items||[];render(d.stats)}
+    }).catch(function(){});
+  }
+  function check(){send.disabled=busy||!(rName.value.trim()&&rMsg.value.trim()&&pres)}
   [rName,rMsg].forEach(function(el){el.addEventListener('input',check)});
   $$('.pill').forEach(function(b){b.addEventListener('click',function(){
     pres=b.dataset.v; $$('.pill').forEach(function(x){x.classList.toggle('on',x===b)}); check()})});
+  function finished(){
+    rMsg.value='';pres='';$$('.pill').forEach(function(x){x.classList.remove('on')});
+    say('Terima kasih, ucapan kamu sudah terkirim.'); setTimeout(function(){say('')},4000);
+  }
   send.addEventListener('click',function(){
-    var a=load(); a.push({n:rName.value.trim(),m:rMsg.value.trim(),p:pres,t:Date.now()}); save(a);
-    rName.value='';rMsg.value='';pres='';$$('.pill').forEach(function(x){x.classList.remove('on')});check();render();
-    $('#rInfo').textContent='Terima kasih, ucapan kamu sudah terkirim.'; setTimeout(function(){$('#rInfo').textContent=''},3500);
+    if(busy) return;
+    var rec={n:rName.value.trim(),m:rMsg.value.trim(),p:pres,t:Date.now()};
+    if(!SHEET){items.push(rec); lsave(items); finished(); render(); check(); return}
+    busy=true; check(); say('Mengirim...');
+    fetch(SHEET,{method:'POST',body:JSON.stringify({n:rec.n,m:rec.m,p:rec.p,hp:($('#rHp')||{}).value||''})})
+      .then(function(r){return r.json()})
+      .then(function(d){ if(!d||!d.ok) throw new Error((d&&d.error)||'gagal'); items.push(rec); render(); finished(); refresh(); })
+      .catch(function(){ say('Gagal mengirim. Periksa koneksi lalu coba lagi.',true) })
+      .then(function(){ busy=false; check() });
   });
   var g=new URLSearchParams(location.search).get('to'); if(g) rName.value=g, check();
-  render();
+  refresh();
+  if(SHEET){                                   // segarkan daftar saat bagian ucapan terlihat dan tiap 60 detik
+    var seen=false; new IntersectionObserver(function(es){seen=es[0].isIntersecting; if(seen) refresh()}).observe($('#rList'));
+    setInterval(function(){ if(seen&&!document.hidden) refresh() },60000);
+  }
 })();
 </script>
 
@@ -857,7 +885,7 @@
     }
   });
 
-  // efek tombol
+  // efek klik
   document.addEventListener('pointerdown',function(e){
     var b=e.target.closest('.btn,#open,.h-btn'); if(!b) return;
     var r=b.getBoundingClientRect(),s=Math.max(r.width,r.height), d=document.createElement('span');
