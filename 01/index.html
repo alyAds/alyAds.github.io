@@ -220,13 +220,18 @@
   .tag{display:inline-block;font:600 11px var(--font-body);border-radius:10px;padding:1px 8px;margin-left:6px;background:#e5ebf4;color:var(--navy)}
 
   /* penutup */
-  .closing1{position:relative;min-height:50vh;display:flex;align-items:flex-end;justify-content:center;padding:0 20px 24px;
-            background:#4A5A74 url("assets/bg-closing.jpg") center top/cover}
-  .closing1::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#ffffff00 40%,#ffffffee 100%)}
-  .closing1 h2{position:relative;z-index:5;font-family:var(--font-script);font-weight:400;font-size:46px;color:#D8AF6F;text-shadow:1px 1px 2px #fff}
-  .closing2{background:#fff url("assets/bg-mempelai.webp") center/cover;min-height:40vh;padding:10px 30px 50px;text-align:center}
+  .penutup{position:relative;background:#eef1f6 url("assets/bg-mempelai.webp") center bottom/cover no-repeat}
+  .closing1{position:relative;min-height:62vh;display:flex;align-items:flex-end;justify-content:center;padding:0 20px 8px}
+  .closing1::after{content:"";position:absolute;inset:0;z-index:0;background:url("assets/bg-closing.jpg") center top/cover no-repeat;
+    -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 48%,rgba(0,0,0,.55) 72%,rgba(0,0,0,.18) 90%,transparent 100%);
+            mask-image:linear-gradient(to bottom,#000 0%,#000 48%,rgba(0,0,0,.55) 72%,rgba(0,0,0,.18) 90%,transparent 100%)}
+  .closing1 h2{position:relative;z-index:5;font-family:var(--font-script);font-weight:400;font-size:46px;color:#D8AF6F;text-shadow:0 0 8px #fff,1px 1px 2px #fff}
+  .closing2{background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,.62) 28%,rgba(255,255,255,.55) 80%,rgba(255,255,255,.3) 100%);min-height:34vh;padding:6px 30px 56px;text-align:center}
+  .closing1 .birdfield{z-index:1}
+  .closing2 .birdfield{z-index:0}
+  .closing2>*:not(.birdfield){position:relative;z-index:1}
   .closing2 p{font-family:var(--font-news);font-size:13px;font-weight:500;color:#242424;line-height:1.6}
-  .closing2 h3{font-family:var(--font-display);font-weight:500;font-size:22px;color:var(--gold);text-shadow:1px 1px 1px #fff;margin-top:22px}
+  .closing2 h3{font-family:var(--font-display);font-weight:500;font-size:22px;color:#B98E48;text-shadow:1px 1px 1px #fff;margin-top:22px}
   .closing2 h2{font-family:var(--font-display);font-weight:500;font-size:34px;color:var(--navy-dark);margin-top:8px}
   .foot{background:#4A5A74;height:22px}
 
@@ -550,12 +555,14 @@
   </section>
 
   <!-- ===== PENUTUP ===== -->
-  <section class="sec closing1"><h2 class="rv zoom">Terimakasih</h2></section>
-  <section class="sec closing2">
-    <p class="rv zoom">Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.</p>
-    <h3 class="rv zoom">Wassalamu'alaikum Wr. Wb.</h3>
-    <h2 class="rv zoom">Ayu &amp; Ezi</h2>
-  </section>
+  <div class="penutup">
+    <section class="sec closing1"><h2 class="rv zoom">Terimakasih</h2></section>
+    <section class="sec closing2">
+      <p class="rv zoom">Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.</p>
+      <h3 class="rv zoom">Wassalamu'alaikum Wr. Wb.</h3>
+      <h2 class="rv zoom">Ayu &amp; Ezi</h2>
+    </section>
+  </div>
   <div class="foot"></div>
 
 </main>
@@ -696,10 +703,8 @@
     else{var t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){}t.remove()}
   })});
 
-  // RSVP + ucapan. Isi sheetUrl di UNDANGAN_CONFIG (bagian <head>) agar tersambung ke Google Sheet;
-  // jika kosong, ucapan hanya disimpan di browser pengunjung.
   var SHEET=(window.UNDANGAN_CONFIG&&window.UNDANGAN_CONFIG.sheetUrl)||'';
-  var KEY='undangan-ezi-Ayu-ucapan', pres='', rName=$('#rName'), rMsg=$('#rMsg'), send=$('#rSend'), info=$('#rInfo'), items=[], busy=false;
+  var KEY='undangan-ezi-ayu-ucapan', pres='', rName=$('#rName'), rMsg=$('#rMsg'), send=$('#rSend'), info=$('#rInfo'), items=[], busy=false;
   function say(t,err){info.textContent=t; info.style.color=err?'#b3261e':''}
   function lload(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
   function lsave(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
@@ -800,7 +805,7 @@
   Field.prototype.size=function(){var r=this.el.getBoundingClientRect(); this.rect=r; this.w=r.width; this.h=r.height};
   Field.prototype.add=function(temp,x,y){
     if(!this.w) this.size();
-    var dark=this.color!=='#0F031A', v=Math.random()<(dark?.85:.5)?'w':'g', sz=temp?30+Math.random()*14:36+Math.random()*34, el=birdEl(v,sz);
+    var dark=this.color!=='#0F031A', v=Math.random()<(dark?.85:.5)?'w':'g', sz=temp?24+Math.random()*11:28+Math.random()*27, el=birdEl(v,sz);
     el.style.opacity=temp?1:.9; this.el.appendChild(el);
     var dir=Math.random()<.5?-1:1;
     var b={el:el,w:sz,dir:dir,sp:(.5+Math.random()*.9)*(sz/52+.45),phase:Math.random()*6.28,freq:.5+Math.random()*.9,
