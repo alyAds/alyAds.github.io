@@ -47,29 +47,8 @@
   window.addEventListener("invitation-open", function () {
     if (stdLoaded) return;
     stdLoaded = true;
-    var id = "-koKPVSwiOo";
     $("#stdVid").innerHTML =
-      '<iframe src="https://www.youtube-nocookie.com/embed/' +
-      id +
-      "?autoplay=1&mute=1&controls=0&loop=1&playlist=" +
-      id +
-      '&playsinline=1&modestbranding=1&rel=0" allow="autoplay; encrypted-media" title="Latar video"></iframe>';
-  });
-
-  var yt = $("#yt");
-  yt.addEventListener("click", function () {
-    if ($("iframe", yt)) return;
-    var f = document.createElement("iframe");
-    f.src =
-      "https://www.youtube-nocookie.com/embed/" +
-      yt.dataset.id +
-      "?autoplay=1&rel=0";
-    f.allow = "autoplay; encrypted-media; picture-in-picture";
-    f.allowFullscreen = true;
-    f.title = "Video undangan";
-    yt.innerHTML = "";
-    yt.appendChild(f);
-    if (window.__pauseMusic) window.__pauseMusic();
+      '<video src="./assets/romantic-flower.mp4" autoplay muted loop playsinline aria-label="Latar video"></video>';
   });
 
   // lightbox

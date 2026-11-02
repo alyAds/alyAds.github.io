@@ -483,7 +483,7 @@ body.locked {
   gap: 14px;
   padding: 50px 20px;
   overflow: hidden;
-  background: #fff url("../assets/story.jpg") center/cover no-repeat;
+  background: #fff url("../assets/ezi-ayu-4.jpeg") center/cover no-repeat;
 }
 .std::before {
   content: "";
@@ -729,7 +729,7 @@ body.locked {
   aspect-ratio: 16/9;
   border-radius: 16px;
   overflow: hidden;
-  background: #222 url("../assets/story.jpg") center/cover;
+  background: #222 url("../assets/ezi-ayu-2.png") center/cover;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
@@ -1129,7 +1129,7 @@ body.locked {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url("../assets/bg-closing.jpg") center top/cover no-repeat;
+  background: url("../assets/ezi-ayu-4.jpeg") center top/cover no-repeat;
   -webkit-mask-image: linear-gradient(
     to bottom,
     #000 0%,
