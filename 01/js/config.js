@@ -6,7 +6,7 @@
 window.UNDANGAN_CONFIG = Object.assign(
   {
     sheetUrl:
-      "https://script.google.com/macros/s/AKfycbxPe7tmv_tOE1C-PIgrT5EGW3AlegW3VrwiRJw7A0NIJaQC0AAG6kxUiACf0NwzZJilqw/exec",
+      "",
   },
   window.UNDANGAN_CONFIG || {}
 );

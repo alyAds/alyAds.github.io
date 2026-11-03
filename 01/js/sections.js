@@ -6,6 +6,115 @@
     $$ = function (q, c) {
       return [].slice.call((c || document).querySelectorAll(q));
     };
+  const RUN_DEMO = false; // set false untuk menonaktifkan demo tanggal
+
+  if (RUN_DEMO) {
+    /* DEMO: tanggal selalu 1 bulan dari tanggal akses.
+     Resepsi = akses + 1 bulan (pukul 10.00 WIB, target countdown),
+     akad = resepsi - 5 hari, live streaming = akad + 1 hari.
+     Blok ini harus jalan SEBELUM target countdown dibaca di bawah. */
+    var demoDays = [
+      "Minggu",
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+    ];
+    var demoMonths = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+    var demoShortMonths = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei",
+      "Jun",
+      "Jul",
+      "Agu",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des",
+    ];
+    function demoPad(n) {
+      return String(n).padStart(2, "0");
+    }
+    function demoAddOneMonth(d) {
+      var y = d.getFullYear(),
+        m = d.getMonth() + 1;
+      var lastDay = new Date(y, m + 1, 0).getDate();
+      return new Date(y, m, Math.min(d.getDate(), lastDay), 10, 0, 0, 0);
+    }
+    function demoLongDate(d) {
+      return (
+        demoDays[d.getDay()] +
+        ", " +
+        d.getDate() +
+        " " +
+        demoMonths[d.getMonth()] +
+        " " +
+        d.getFullYear()
+      );
+    }
+    var yearStoryBegan = new Date().getFullYear() - 3;
+    var demoResepsi = demoAddOneMonth(new Date());
+    var demoAkad = new Date(demoResepsi);
+    demoAkad.setDate(demoAkad.getDate() - 5);
+    var demoLive = new Date(demoResepsi);
+    var demoCd = $("#cd");
+    if (demoCd)
+      demoCd.dataset.target =
+        demoResepsi.getFullYear() +
+        "-" +
+        demoPad(demoResepsi.getMonth() + 1) +
+        "-" +
+        demoPad(demoResepsi.getDate()) +
+        "T10:00:00+07:00";
+    var demoHeroDate = $(".h-date");
+    if (demoHeroDate) demoHeroDate.textContent = demoLongDate(demoResepsi);
+    var demoCards = $$("#date .card");
+    function demoSetCard(card, d) {
+      if (!card) return;
+      var day = $(".day", card),
+        num = $(".num", card),
+        mon = $(".mon", card);
+      if (day) day.textContent = demoDays[d.getDay()];
+      if (num) {
+        num.textContent = d.getDate();
+        num.dataset.count = d.getDate();
+      }
+      if (mon)
+        mon.textContent = demoMonths[d.getMonth()] + " " + d.getFullYear();
+    }
+    demoSetCard(demoCards[0], demoAkad);
+    demoSetCard(demoCards[1], demoResepsi);
+    var demoLiveDescs = $$("#date .card.live .desc");
+    if (demoLiveDescs[1]) demoLiveDescs[1].textContent = demoLongDate(demoLive);
+    var demoChip = $('#tl2 article[data-i="2"] .chip');
+    if (demoChip)
+      demoChip.textContent =
+        demoPad(demoResepsi.getDate()) +
+        " " +
+        demoShortMonths[demoResepsi.getMonth()] +
+        " " +
+        demoResepsi.getFullYear();
+    var ysb = $(".year-story-began");
+    if (ysb) ysb.textContent = yearStoryBegan;
+  }
 
   var cd = $("#cd"),
     target = new Date(cd.dataset.target).getTime();
@@ -14,7 +123,7 @@
       p = function (n) {
         return String(n).padStart(2, "0");
       };
-    
+
     if (d === 0) {
       cd.remove();
       $("#std h2").textContent = "Sakinah Mawaddah Warahmah";
@@ -138,7 +247,7 @@
   });
 
   var SHEET = (window.UNDANGAN_CONFIG && window.UNDANGAN_CONFIG.sheetUrl) || "";
-  var KEY = "undangan-ezi-ayu-ucapan",
+  var KEY = "undangan-demo-ucapan",
     pres = "",
     rName = $("#rName"),
     rMsg = $("#rMsg"),
