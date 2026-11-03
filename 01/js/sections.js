@@ -6,7 +6,7 @@
     $$ = function (q, c) {
       return [].slice.call((c || document).querySelectorAll(q));
     };
-  const RUN_DEMO = false; // set false untuk menonaktifkan demo tanggal
+  const RUN_DEMO = true; // set false untuk menonaktifkan demo tanggal
 
   if (RUN_DEMO) {
     /* DEMO: tanggal selalu 1 bulan dari tanggal akses.
