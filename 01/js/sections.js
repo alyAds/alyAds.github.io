@@ -14,10 +14,16 @@
       p = function (n) {
         return String(n).padStart(2, "0");
       };
-    $("[data-p=d]", cd).textContent = Math.floor(d / 864e5);
-    $("[data-p=h]", cd).textContent = p(Math.floor((d % 864e5) / 36e5));
-    $("[data-p=m]", cd).textContent = p(Math.floor((d % 36e5) / 6e4));
-    $("[data-p=s]", cd).textContent = p(Math.floor((d % 6e4) / 1e3));
+    
+    if (d === 0) {
+      cd.remove();
+      $("#std h2").textContent = "Sakinah Mawaddah Warahmah";
+    } else {
+      $("[data-p=d]", cd).textContent = Math.floor(d / 864e5);
+      $("[data-p=h]", cd).textContent = p(Math.floor((d % 864e5) / 36e5));
+      $("[data-p=m]", cd).textContent = p(Math.floor((d % 36e5) / 6e4));
+      $("[data-p=s]", cd).textContent = p(Math.floor((d % 6e4) / 1e3));
+    }
   }
   tick();
   setInterval(tick, 1000);
