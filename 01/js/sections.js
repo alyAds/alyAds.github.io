@@ -37,7 +37,7 @@
         })(t0);
       });
     },
-    { threshold: 0.6 }
+    { threshold: 0.6 },
   );
   $$("[data-count]").forEach(function (el) {
     co.observe(el);
@@ -47,9 +47,22 @@
   window.addEventListener("invitation-open", function () {
     if (stdLoaded) return;
     stdLoaded = true;
-    $("#stdVid").innerHTML =
-      '<video src="./assets/romantic-flower.mp4" autoplay muted loop playsinline aria-label="Latar video"></video>';
+    $("#stdVid video").play();
   });
+
+  // video galeri lokal: klik untuk memuat
+  var yt = $("#yt");
+  if (yt) {
+    yt.addEventListener("click", function () {
+      if (!$("video", yt).classList.contains("show")) {
+        $("video", yt).style.display = "block";
+        $("video", yt).play();
+        $("video", yt).classList.add("show");
+        $(".play", yt).style.display = "none";
+        if (window.__pauseMusic) window.__pauseMusic();
+      }
+    });
+  }
 
   // lightbox
   var links = $$("#grid a"),
@@ -286,7 +299,7 @@
       });
   });
   var g = new URLSearchParams(location.search).get("to");
-  if (g) (rName.value = g), check();
+  if (g) ((rName.value = g), check());
   refresh();
   if (SHEET) {
     // segarkan daftar saat bagian ucapan terlihat dan tiap 60 detik

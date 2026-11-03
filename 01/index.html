@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="utf-8" />
@@ -15,6 +15,20 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .std {
+        background: #fff url("assets/ezi-ayu-4.jpeg") center/cover no-repeat;
+      }
+      .yt {
+        background: #222 url("assets/ezi-ayu-2.png") center/cover;
+      }
+      .closing1::after {
+        background: url("assets/ezi-ayu-4.jpeg") center top/cover no-repeat;
+      }
+      #kolom {
+        background: url("assets/ezi-ayu.jpeg") top center/cover no-repeat;
+      }
+    </style>
     <script src="js/config.js"></script>
   </head>
   <body class="locked">
@@ -93,7 +107,8 @@
           />
           <div class="rv zoom m-name">Mhd Alfaridzi Anshora</div>
           <div class="rv zoom m-text">
-            Putra Pertama dari <span>Bapak Endryan Agus Anshora</span><br />&amp;
+            Putra Pertama dari <span>Bapak Endryan Agus Anshora</span
+            ><br />&amp;
             <span>Linda Suci Lestari</span>
           </div>
           <div class="rv zoom m-ig">
@@ -132,7 +147,15 @@
 
       <!-- ===== SAVE THE DATE ===== -->
       <section class="sec std" id="std">
-        <div class="vid" id="stdVid"></div>
+        <div class="vid" id="stdVid">
+          <video
+            src="assets/romantic-flower.mp4"
+            muted
+            loop
+            playsinline
+            aria-label="Latar video"
+          ></video>
+        </div>
         <h2 class="rv zoom">Save The Date</h2>
         <div
           class="rv zoom cd"
@@ -161,9 +184,7 @@
               />
             </svg>
           </div>
-          <div class="place">
-            Terlaksana
-          </div>
+          <div class="place">Terlaksana</div>
         </div>
         <div class="card rv zoom">
           <h2>Resepsi</h2>
@@ -179,7 +200,8 @@
             </svg>
           </div>
           <div class="place">
-            Tempat : <strong>KEDIAMAN MEMPELAI WANITA</strong><br />Jl. Sederhana Pasar 7 Tembung Percut Sei Tuan<br />, Deli Serdang
+            Tempat : <strong>KEDIAMAN MEMPELAI WANITA</strong><br />Jl.
+            Sederhana Pasar 7 Tembung Percut Sei Tuan<br />, Deli Serdang
           </div>
           <a
             class="btn"
@@ -191,6 +213,27 @@
                 d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z"
               /></svg
             >Lihat Lokasi</a
+          >
+        </div>
+        <div class="card live rv zoom">
+          <h2>Live Streaming</h2>
+          <div class="desc">
+            Kami mengundang Bapak/Ibu/Saudara/i untuk menyaksikan pernikahan
+            kami secara virtual yang disiarkan langsung melalui media sosial di
+            bawah ini
+          </div>
+          <div class="desc" style="margin-top: 6px">Senin, 2 Desember 2026</div>
+          <div class="desc" style="margin: 2px 0 14px">Pukul : 08.00 WIB</div>
+          <a
+            class="btn"
+            href="https://www.instagram.com/"
+            target="_blank"
+            rel="noopener"
+            ><svg viewBox="0 0 24 24">
+              <path
+                d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM17.2 6a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 17.2 6z"
+              /></svg
+            >@ezi</a
           >
         </div>
       </section>
@@ -461,7 +504,24 @@
 
       <!-- ===== GALERI ===== -->
       <section class="sec galeri">
-        <h2 class="rv zoom" style="margin-bottom: 1rem;">Galeri Foto</h2>
+        <h2 class="rv zoom" style="margin-bottom: 1rem">Galeri Foto</h2>
+        <div
+          class="yt rv zoom"
+          id="yt"
+          data-id="8h7pbb4A4JI"
+          role="button"
+          aria-label="Putar video"
+        >
+          <video
+            src="assets/romantic-flower.mp4"
+            controls
+            playsinline
+            loop
+            aria-label="Latar video"
+            style="display: none;"
+          ></video>
+          <span class="play"></span>
+        </div>
         <div class="grid rv zoom" id="grid">
           <a href="assets/ezi-ayu-5.jpeg "
             ><img loading="lazy" src="assets/ezi-ayu-5.jpeg" alt=""
@@ -506,9 +566,23 @@
                 </div>
                 <img class="chip" src="assets/chip.png" alt="" />
               </div>
-              <div class="no">1060017090302 </div>
+              <div class="no">1060017090302</div>
               <div class="an">Dwi Ayu Gusti</div>
               <button data-copy="1060017090302">Copy</button>
+            </div>
+            <div class="gift">
+              <h4>Kirim Hadiah</h4>
+              <div>
+                <span>Nama Penerima</span><span>:</span
+                ><span>Mhd. Alfaridzi Anshora</span>
+              </div>
+              <div>
+                <span>No. HP</span><span>:</span><span>1234567890</span>
+              </div>
+              <div>
+                <span>Alamat</span><span>:</span
+                ><span>Ds Pagu Kec.Wates Kab. Kediri</span>
+              </div>
             </div>
           </div>
         </div>
