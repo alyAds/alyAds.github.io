@@ -136,6 +136,52 @@
   tick();
   setInterval(tick, 1000);
 
+  /* ===== SAVE THE DATE =====
+     Tombol "Simpan ke Kalender" mengunduh file .ics Resepsi
+     (Minggu, 6 Desember 2026, 10.00-12.00 WIB) yang bisa dibuka
+     Google Calendar, Apple Calendar, dan Outlook. Waktu diambil
+     dari target countdown yang sama (#cd data-target). */
+  var saveBtn = $("#btn-save-cal");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", function () {
+      var start = new Date(target),
+        end = new Date(target + 2 * 36e5),
+        fmt = function (d) {
+          return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+        },
+        ics = [
+          "BEGIN:VCALENDAR",
+          "VERSION:2.0",
+          "PRODID:-//Ayu & Ezi//Save The Date//ID",
+          "BEGIN:VEVENT",
+          "UID:resepsi-ayu-ezi@alyads.github.io",
+          "DTSTAMP:" + fmt(new Date()),
+          "DTSTART:" + fmt(start),
+          "DTEND:" + fmt(end),
+          "SUMMARY:Resepsi Pernikahan Ayu & Ezi",
+          "LOCATION:Kediaman Mempelai Wanita\, Jl. Sederhana Pasar 7 Tembung\, Percut Sei Tuan\, Deli Serdang",
+          "DESCRIPTION:Info lengkap: https://alyads.github.io/01/ayu-ezi/",
+          "BEGIN:VALARM",
+          "TRIGGER:-P1D",
+          "ACTION:DISPLAY",
+          "DESCRIPTION:Resepsi Pernikahan Ayu & Ezi besok",
+          "END:VALARM",
+          "END:VEVENT",
+          "END:VCALENDAR",
+        ].join("\r\n"),
+        blob = new Blob([ics], { type: "text/calendar" }),
+        a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "Resepsi-Ayu-Ezi.ics";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () {
+        URL.revokeObjectURL(a.href);
+      }, 1000);
+    });
+  }
+
   var co = new IntersectionObserver(
     function (es) {
       es.forEach(function (e) {
