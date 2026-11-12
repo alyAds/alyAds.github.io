@@ -136,6 +136,76 @@
   tick();
   setInterval(tick, 1000);
 
+  /* ===== SAVE THE DATE =====
+     Tombol "Simpan ke Kalender" mengunduh file .ics Resepsi
+     (10.00-12.00 WIB, tanggal dinamis demo = akses + 1 bulan)
+     yang bisa dibuka Google Calendar, Apple Calendar, dan
+     Outlook. Waktu diambil dari target countdown yang sama
+     (#cd data-target, sudah digeser blok demo di atas). */
+  var saveBtn = $("#btn-save-cal");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", function () {
+      var start = new Date(target),
+        end = new Date(target + 2 * 36e5),
+        fmt = function (d) {
+          return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+        },
+        ics = [
+          "BEGIN:VCALENDAR",
+          "VERSION:2.0",
+          "PRODID:-//Nadia & Rizki//Save The Date//ID",
+          "BEGIN:VEVENT",
+          "UID:resepsi-nadia-rizki@alyads.github.io",
+          "DTSTAMP:" + fmt(new Date()),
+          "DTSTART:" + fmt(start),
+          "DTEND:" + fmt(end),
+          "SUMMARY:Resepsi Pernikahan Nadia & Rizki",
+          "LOCATION:Kediaman Mempelai Wanita\, Jl. Mawar No. 18\, Bandung\, Jawa Barat",
+          "DESCRIPTION:Info lengkap: https://alyads.github.io/01/",
+          "BEGIN:VALARM",
+          "TRIGGER:-P1D",
+          "ACTION:DISPLAY",
+          "DESCRIPTION:Resepsi Pernikahan Nadia & Rizki besok",
+          "END:VALARM",
+          "END:VEVENT",
+          "END:VCALENDAR",
+        ].join("\r\n"),
+        blob = new Blob([ics], { type: "text/calendar" }),
+        a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "Resepsi-Nadia-Rizki.ics";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () {
+        URL.revokeObjectURL(a.href);
+      }, 1000);
+    });
+  }
+  var gcalBtn = $("#btn-gcal");
+  if (gcalBtn) {
+    var gStart = new Date(target),
+      gEnd = new Date(target + 2 * 36e5),
+      gFmt = function (d) {
+        return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      };
+    gcalBtn.href =
+      "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" +
+      encodeURIComponent("Resepsi Pernikahan Nadia & Rizki") +
+      "&dates=" +
+      gFmt(gStart) +
+      "/" +
+      gFmt(gEnd) +
+      "&details=" +
+      encodeURIComponent(
+        "Resepsi pernikahan Nadia Putri Lestari dan Rizki Aditya Pratama. Info lengkap: https://alyads.github.io/01/",
+      ) +
+      "&location=" +
+      encodeURIComponent(
+        "Kediaman Mempelai Wanita, Jl. Mawar No. 18, Bandung, Jawa Barat",
+      );
+  }
+
   var co = new IntersectionObserver(
     function (es) {
       es.forEach(function (e) {
