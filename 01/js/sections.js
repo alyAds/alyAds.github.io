@@ -111,6 +111,20 @@
         demoShortMonths[demoResepsi.getMonth()] +
         " " +
         demoResepsi.getFullYear();
+    /* Lamaran dinamis: 6 bulan sebelum resepsi, tanggal yang sama
+       (mengikuti pola Ayu-Ezi: lamaran 6 Jun 2026, resepsi 6 Des 2026). */
+    var demoLamaran = new Date(demoResepsi);
+    demoLamaran.setMonth(demoLamaran.getMonth() - 6);
+    if (demoLamaran.getDate() !== demoResepsi.getDate())
+      demoLamaran.setDate(0); /* jepit ke akhir bulan target bila meluber */
+    var demoLamaranChip = $('#tl2 article[data-i="1"] .chip');
+    if (demoLamaranChip)
+      demoLamaranChip.textContent =
+        demoPad(demoLamaran.getDate()) +
+        " " +
+        demoShortMonths[demoLamaran.getMonth()] +
+        " " +
+        demoLamaran.getFullYear();
     var ysb = $(".year-story-began");
     if (ysb) ysb.textContent = yearStoryBegan;
   }
